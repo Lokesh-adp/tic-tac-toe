@@ -1,0 +1,59 @@
+def create_board():
+    return [[' ' for _ in range(3)] for _ in range(3)]
+
+def display_board(board):
+    for row in board:
+        print('|'.join(row))
+        print('-' * 5)
+
+def check_win(board, mark):
+    # Check rows, columns and diagonals for a win
+    for row in board:
+        if all(s == mark for s in row):
+            return True
+    for col in range(3):
+        if all(board[row][col] == mark for row in range(3)):
+            return True
+    if all(board[i][i] == mark for i in range(3)):
+        return True
+    if all(board[i][2 - i] == mark for i in range(3)):
+        return True
+    return False
+
+def check_tie(board):
+    return all(all(cell != ' ' for cell in row) for row in board)
+
+def play_game():
+    board = create_board()
+    current_mark = 'X'
+    while True:
+        display_board(board)
+        print(f"Player {current_mark}'s turn")
+        
+        row = int(input("Enter row (0, 1, 2): "))
+        col = int(input("Enter col (0, 1, 2): "))
+        
+        if board[row][col] != ' ':
+            print("Cell already taken! Try again.")
+            continue
+        
+        board[row][col] = current_mark
+        
+        if check_win(board, current_mark):
+            display_board(board)
+            print(f"Player {current_mark} wins!")
+            break
+        elif check_tie(board):
+            display_board(board)
+            print("It's a tie!")
+            break
+        
+        current_mark = 'O' if current_mark == 'X' else 'X'
+
+    play_again = input("Do you want to play again? (yes/no): ").lower()
+    if play_again == 'yes':
+        play_game()
+    else:
+        print("Thanks for playing!")
+
+play_game()
